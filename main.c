@@ -57,22 +57,33 @@ void recordData() {
     strftime(datetime, sizeof(datetime), "%Y-%m-%d %H:%M:%S", tm_info);
 
     // Write the data to a file
-    FILE *fp = fopen("/tmp/data.txt", "a");
+    FILE *fp = fopen("/usr/local/etc/data.txt", "a");
     fprintf(fp, "%s, %d, %s\n", datetime, batteryPercentage, batteryStatus);
     fclose(fp);
 }
 
-int main() {
-    // Daemonize the process
-    pid_t pid, sid;
-    pid = fork();
-    if (pid < 0) exit(EXIT_FAILURE);
-    if (pid > 0) exit(EXIT_SUCCESS);
+int main(int argc, char * argv[]) {
+    // Check if the argument is --daemonize
+    if (argc > 1) {
+        if ((strcmp(argv[1], "--daemonize") == 0) || (strcmp(argv[1], "-d") == 0)) {
+            printf("Daemonizing...\n");
 
-    sid = setsid();
+            // Daemonize the process
+            pid_t pid, sid;
+            pid = fork();
+            if (pid < 0) exit(EXIT_FAILURE);
+            if (pid > 0) exit(EXIT_SUCCESS);
 
-    if (sid < 0) exit(EXIT_FAILURE);
-    if ((chdir("/")) < 0) exit(EXIT_FAILURE);
+            sid = setsid();
+
+            if (sid < 0) exit(EXIT_FAILURE);
+            if ((chdir("/")) < 0) exit(EXIT_FAILURE);
+
+        }
+    } else {
+        printf("Usage: %s [--daemonize|-d]\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
 
     while (1) {
         recordData();

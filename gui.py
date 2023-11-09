@@ -15,7 +15,7 @@ ax = fig.add_subplot(111)
 
 # Read your data from a CSV file
 data = []
-with open('/tmp/data.txt', 'r') as csvfile:
+with open('/usr/local/etc/data.txt', 'r') as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
         data.append(row)
