@@ -62,26 +62,46 @@ void recordData() {
     fclose(fp);
 }
 
+void daemonize() {
+    printf("Daemonizing...\n");
+
+    // Daemonize the process
+    pid_t pid, sid;
+    pid = fork();
+
+    if (pid < 0) {
+        printf("daemonizing failed! pid: %d\n", pid);
+        exit(EXIT_FAILURE);
+    }
+
+    // This is not needed. 
+    if (pid > 0) {
+        printf("daemonizing succeeded! pid: %d\n", pid);
+        exit(EXIT_SUCCESS);
+    }
+
+    sid = setsid();
+
+    if (sid < 0) {
+        printf("daemonizing failed! sid: %d\n", sid);
+        exit(EXIT_FAILURE);
+    }
+
+    if ((chdir("/")) < 0) {
+        printf("daemonizing failed! dir not changed\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
 int main(int argc, char * argv[]) {
     // Check if the argument is --daemonize
     if (argc > 1) {
-        if ((strcmp(argv[1], "--daemonize") == 0) || (strcmp(argv[1], "-d") == 0)) {
-            printf("Daemonizing...\n");
-
-            // Daemonize the process
-            pid_t pid, sid;
-            pid = fork();
-            if (pid < 0) exit(EXIT_FAILURE);
-            if (pid > 0) exit(EXIT_SUCCESS);
-
-            sid = setsid();
-
-            if (sid < 0) exit(EXIT_FAILURE);
-            if ((chdir("/")) < 0) exit(EXIT_FAILURE);
-
-        }
+        if ((strcmp(argv[1], "--daemonize") == 0) || (strcmp(argv[1], "-d") == 0))
+            daemonize();
     } else {
         printf("Usage: %s [--daemonize|-d]\n", argv[0]);
+        printf("recording data once.\n");
+        recordData();
         exit(EXIT_FAILURE);
     }
 
