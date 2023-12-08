@@ -1,0 +1,63 @@
+#!/bin/zsh
+
+# Script must be ran as root.
+if [[ $EUID -ne 0 ]]; then
+    echo "This script must be run as root"
+    echo "Try 'sudo ./install'"
+    exit 1
+fi
+
+echo "Installing the battery monitor onto your system..."
+
+# Get the current working directory and the virtual environment
+CWD=$(pwd)
+ENV=$(pwd)/bin/activate
+COMMAND="python $CWD/batterymon.py"
+
+# Create the virtual environment and install the requirements
+python -m venv .
+source bin/activate
+pip install -r requirements.txt
+
+# Create the executable for the GUI
+sudo echo "#!/bin/zsh" > /usr/local/bin/battery-mon
+sudo echo "source $ENV" >> /usr/local/bin/battery-mon
+sudo echo "$COMMAND" >> /usr/local/bin/battery-mon
+sudo chmod +x /usr/local/bin/battery-mon
+
+gcc -o battery-mon main.c
+
+# Add desktop entries (OS specific)
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+
+    # Create desktop entry
+    DESKTOP="/usr/share/applications/battery-mon.desktop"
+
+    sudo echo "[Desktop Entry]" > $DESKTOP
+    sudo echo "Name=Battery Monitor" >> $DESKTOP
+    sudo echo "Exec=battery-mon" >> $DESKTOP
+    sudo echo "Terminal=false" >> $DESKTOP
+    sudo echo "Icon=$CWD/icon.png" >> $DESKTOP
+    sudo echo "Type=Application" >> $DESKTOP
+    sudo echo "Categories=Utility;" >> $DESKTOP
+
+    # Create systemd service
+    SERVICE="/etc/systemd/system/battery-mon.service"
+
+    sudo echo "[Unit]" > $SERVICE
+    sudo echo "Description=Battery Monitor" >> $SERVICE
+    sudo echo "[Service]" >> $SERVICE
+    sudo echo "ExecStart=$CWD/battery-mon" >> $SERVICE
+    sudo echo "[Install]" >> $SERVICE
+    sudo echo "WantedBy=multi-user.target" >> $SERVICE
+
+    # Enable the service
+    sudo systemctl enable battery-mon.service
+
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    # TODO: Add MacOS support for desktop entry
+    echo "MacOS support not yet implemented."
+    echo "Battery Monitor may be ran currently by running the `battery-mon` command in the terminal."
+fi
+
+echo "Done!"

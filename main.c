@@ -77,14 +77,6 @@ void daemonize() {
     // This is not needed. 
     if (pid > 0) {
         printf("daemonizing succeeded! pid: %d\n", pid);
-        exit(EXIT_SUCCESS);
-    }
-
-    sid = setsid();
-
-    if (sid < 0) {
-        printf("daemonizing failed! sid: %d\n", sid);
-        exit(EXIT_FAILURE);
     }
 
     if ((chdir("/")) < 0) {
@@ -94,16 +86,7 @@ void daemonize() {
 }
 
 int main(int argc, char * argv[]) {
-    // Check if the argument is --daemonize
-    if (argc > 1) {
-        if ((strcmp(argv[1], "--daemonize") == 0) || (strcmp(argv[1], "-d") == 0))
-            daemonize();
-    } else {
-        printf("Usage: %s [--daemonize|-d]\n", argv[0]);
-        printf("recording data once.\n");
-        recordData();
-        exit(EXIT_FAILURE);
-    }
+    daemonize();
 
     while (1) {
         recordData();

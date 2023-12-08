@@ -1,0 +1,29 @@
+#!/bin/zsh
+
+# Script must be ran as root.
+if [[ $EUID -ne 0 ]]; then
+    echo "This script must be run as root"
+    echo "Try 'sudo ./install'"
+    exit 1
+fi
+
+echo "Uninstalling the Battery Monitor from your system..."
+
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    # Uninstall desktop entries (OS specific)
+    sudo rm /usr/share/applications/battery-mon.desktop
+
+    # Uninstall systemd service
+    sudo rm /etc/systemd/system/battery-mon.service
+
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    # TODO: Add desktop entry uninstallation for macOS
+    echo "Desktop entry installation/uninstallation for macOS is not supported yet"
+fi
+
+sudo rm /usr/local/bin/battery-mon
+
+cd ..
+sudo rm -rf battery-mon
+
+echo "Done!"
