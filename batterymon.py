@@ -15,11 +15,10 @@ hover = '#C6CAED'
 
 class Application(ctk.CTk):
     def __init__(self):
-        super().__init__(master)
-        self.master = master
-        self.master.title("Battery Monitor")
-        self.master.geometry("960x540")
-        self.master.resizable(False, False)
+        super().__init__()
+        self.title("Battery Monitor")
+        self.geometry("960x540")
+        self.resizable(False, False)
         
         data = []
 
@@ -45,12 +44,12 @@ class Application(ctk.CTk):
         ax.grid()
 
         # Create a canvas to display the plot in the Tkinter window
-        canvas = FigureCanvasTkAgg(fig, master=root)
+        canvas = FigureCanvasTkAgg(fig, master=self)
         canvas.get_tk_widget().pack()
 
     def read_file(self, data):
         with open('/usr/local/etc/data.txt', 'r') as f:
-            reader = csv.reader(csvfile)
+            reader = csv.reader(f)
             for row in reader:
                 data.append(row)
 
