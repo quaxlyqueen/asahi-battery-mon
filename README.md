@@ -23,5 +23,5 @@ power-saving modes, optimization suggestions, and other features that are built-
 
 ### INSTALLATION
     git clone https://github.com/quaxlqueen/battery-mon
-    cd ./battery-mon
-    ./make
+    cd battery-mon
+    sudo ./install
