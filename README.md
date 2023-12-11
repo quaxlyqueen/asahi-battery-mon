@@ -18,8 +18,8 @@ power-saving modes, optimization suggestions, and other features that are built-
     [ ] Implement the GUI graph with GTK.
         [ ] Estimated time remaining section.
         [ ] Power-saving recommendations
-    [ ] Battery-mon daemon on startup.
     [ ] Calculate estimated time remaining based upon historical data.
+    [x] Battery-mon daemon on startup.
 
 ### INSTALLATION
     git clone https://github.com/quaxlqueen/battery-mon
