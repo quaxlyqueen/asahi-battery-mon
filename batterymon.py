@@ -15,11 +15,18 @@ hover = '#C6CAED'
 
 class Application(ctk.CTk):
     def __init__(self):
-        super().__init__(master)
-        self.master = master
-        self.master.title("Battery Monitor")
-        self.master.geometry("960x540")
-        self.master.resizable(False, False)
+        super().__init__(
+            )
+
+        self.title("Battery Monitor")
+        self.geometry("960x540")
+        self.resizable(False, False)
+
+        self.fg_color = accent
+        self.bg_color = base
+        self.border_color = base
+        self.hover_color = base
+        self.text_color = hover
         
         data = []
 
@@ -45,24 +52,25 @@ class Application(ctk.CTk):
         ax.grid()
 
         # Create a canvas to display the plot in the Tkinter window
-        canvas = FigureCanvasTkAgg(fig, master=root)
+        canvas = FigureCanvasTkAgg(fig, master=self)
         canvas.get_tk_widget().pack()
 
     def read_file(self, data):
         with open('/usr/local/etc/data.txt', 'r') as f:
-            reader = csv.reader(csvfile)
+            reader = csv.reader(f)
             for row in reader:
                 data.append(row)
 
-def theme():
+def theme(theme):
     global base
     global accent
     global hover
+
     # obtain the user's home directory
     home = os.path.expanduser('~')
 
     # Read in the colors from the config file
-    with open(home + '/.config/theme/active.theme', 'r') as f:
+    with open(home + '/.config/' + theme, 'r') as f:
         for line in f:
             if line.startswith('base'):
                 base = re.search(r'#[0-9A-Fa-f]{6}', line).group(0)
@@ -71,5 +79,5 @@ def theme():
             elif line.startswith('hover'):
                 hover = re.search(r'#[0-9A-Fa-f]{6}', line).group(0)
 
-theme()
+theme('theme/active.theme')
 Application()
