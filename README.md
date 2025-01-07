@@ -15,7 +15,7 @@ power-saving modes, optimization suggestions, and other features that are built-
 ### TODO
 - [ ] Gather all relavent information for the daemon: display backlight, keyboard backlight, 
       running applications, etc.
-- [ ] Implement the GUI graph with GTK.
+- [X] Implement the GUI graph with GTK.
     - [ ] Estimated time remaining section.
     - [ ] Power-saving recommendations
 - [ ] Calculate estimated time remaining based upon historical data.
@@ -25,3 +25,8 @@ power-saving modes, optimization suggestions, and other features that are built-
     git clone https://github.com/quaxlqueen/battery-mon
     cd battery-mon
     sudo ./install
+
+### Troubleshooting
+    You may need to do the following:
+    sudo chmod a+rw /tmp/battery.txt
+    sudo pacman -S acpi
