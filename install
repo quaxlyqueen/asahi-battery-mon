@@ -8,6 +8,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 echo "Installing the battery monitor onto your system..."
+sudo pacman -S acpi
 
 # Get the current working directory and the virtual environment
 CWD=$(pwd)
